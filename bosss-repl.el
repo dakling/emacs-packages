@@ -1,12 +1,22 @@
 (defvar bosss-repl-path "/usr/bin/csharp")
 
-(defvar bosss-repl-arguments '(nil "-r:/home/klingenberg/BoSSS-experimental/internal/src/private-kli/RANS_Solver/bin/Debug/RANS_Solver.exe"))
+;; TODO find correct arguments
+(defvar bosss-path nil)
 
-(defvar bosss-repl-mode-map
-  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
-    (define-key map "\t" 'completion-at-point)))
+(defvar bosss-repl-arguments
+  (when bosss-path
+    (cons nil (mapcar (lambda (entry) (concat "-r:" entry)) bosss-path))))
+
+;; (defvar bosss-repl-mode-map
+;;   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
+;;     (define-key map "\t" 'completion-at-point)))
+(defvar bosss-repl-mode-map (make-sparse-keymap))
 
 (defvar bosss-repl-prompt-regexp "^\\(?:\\[[^@]+@[^@]+\\]\\)")
+
+(defvar bosss--block-beginning-mark  "==============")
+
+(defvar bosss--block-end-mark  "**************")
 
 (defun run-bosss-repl ()
   (interactive)
@@ -37,8 +47,8 @@
 
 (defun run-bosss-repl-other-frame ()
     (interactive)
-    (run-bosss-repl)
-    (switch-to-buffer-other-window "*bosss*"))
+    (switch-to-buffer-other-window "*bosss*")
+    (run-bosss-repl))
 
 (defun bosss-repl-send-region (beg end)
   (interactive "r")
@@ -46,10 +56,12 @@
 
 (defun bosss-repl-send-current-field ()
   (interactive)
-    (search-backward "==============")
-    (let ((beg (point)))
-    (search-forward "**************")
-    (bosss-repl-send-region beg (point))))
-
+  (save-excursion
+   (search-backward bosss--block-beginning-mark)
+   (forward-line 1)
+   (let ((beg (point)))
+     (search-forward bosss--block-end-mark)
+     (move-end-of-line 0)
+     (bosss-repl-send-region beg (point)))))
 
 (provide 'bosss-repl)
