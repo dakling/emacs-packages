@@ -35,8 +35,8 @@
 
 (defun run-csharp-repl-other-frame ()
     (interactive)
-    (run-csharp-repl)
-    (switch-to-buffer-other-window "*csharp*"))
+    (switch-to-buffer-other-window "*csharp*")
+    (run-csharp-repl))
 
 (defun csharp-repl-send-region (beg end)
   (interactive "r")
