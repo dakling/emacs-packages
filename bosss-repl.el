@@ -7,9 +7,6 @@
   (when bosss-path
     (cons nil (mapcar (lambda (entry) (concat "-r:" entry)) bosss-path))))
 
-;; (defvar bosss-repl-mode-map
-;;   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
-;;     (define-key map "\t" 'completion-at-point)))
 (defvar bosss-repl-mode-map (make-sparse-keymap))
 
 (defvar bosss-repl-prompt-regexp "^\\(?:\\[[^@]+@[^@]+\\]\\)")

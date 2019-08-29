@@ -11,6 +11,8 @@
   ;; (setq font-lock-defaults (cons (list bosss-highlights (car csharp-font-lock-keywords)) (cdr font-lock-defaults)))
   )
 
+(defvar bosss-mode-map (make-sparse-keymap))
+
 (defun bosss-create-new-field ()
   (interactive)
   (search-forward bosss--block-end-mark)

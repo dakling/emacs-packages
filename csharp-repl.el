@@ -2,9 +2,7 @@
 
 (defvar csharp-repl-arguments '())
 
-(defvar csharp-repl-mode-map
-  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
-    (define-key map "\t" 'completion-at-point)))
+(defvar csharp-repl-mode-map (make-sparse-keymap))
 
 (defvar csharp-repl-prompt-regexp "^\\(?:\\[[^@]+@[^@]+\\]\\)")
 
