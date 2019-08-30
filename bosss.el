@@ -22,7 +22,7 @@
   (newline)
   (newline)
   (insert bosss--block-end-mark)
-  (forward-line -1))
+  (forward-line -2))
 
 ;; TODO define text object for a field
 

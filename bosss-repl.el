@@ -1,11 +1,12 @@
 (defvar bosss-repl-path "/usr/bin/csharp")
+;; (defvar bosss-repl-path "/usr/bin/bosss-console")
 
-;; TODO find correct arguments
-(defvar bosss-path nil)
+;; (defvar bosss-repl-arguments
+;;   (when bosss-path
+;;     (cons nil
+;; 	   (mapcar (lambda (entry) (concat "-r:" entry)) (directory-files bosss-path t)))))
 
-(defvar bosss-repl-arguments
-  (when bosss-path
-    (cons nil (mapcar (lambda (entry) (concat "-r:" entry)) bosss-path))))
+(defvar bosss-repl-arguments nil)
 
 (defvar bosss-repl-mode-map (make-sparse-keymap))
 
@@ -60,5 +61,17 @@
      (search-forward bosss--block-end-mark)
      (move-end-of-line 0)
      (bosss-repl-send-region beg (point)))))
+
+(defun bosss-repl-install ()
+  "installs the files needed to run the csharp repl with bosss loaded"
+  (interactive)
+  (if (and (boundp 'bosss-path) bosss-path)
+      (progn
+       (copy-file "./make-pkg.sh" bosss-path t)
+       (let ((default-directory bosss-path))
+	 (async-shell-command
+	  (concat bosss-path "./make-pkg.sh")))
+       (copy-file "./init.cs" "~/.config/csharp/" t))
+    (error "Please specify the path to your BoSSS installation")))
 
 (provide 'bosss-repl)
