@@ -21,7 +21,7 @@ for bin in $(echo "$allbin"); do
         cp -f $bin $relp
 done
 tar cvzf $tarp $relp
-cp $relp/* ~/.config/csharp/
+ln -sf $relp/* ~/.config/csharp/
 if [ $? = 0 ]; then
         sz=$(du -skh $tarp|cut -f1)
         echo "pkg ok at: $tarp $sz"
