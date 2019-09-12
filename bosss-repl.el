@@ -12,6 +12,11 @@
 
 (defvar bosss--block-end-mark  "**************")
 
+(defun bosss-repl-load-my-assembly ()
+  (interactive)
+  (when bosss-path-reference
+    (comint-send-string "*bosss*" (concat "LoadAssembly(\"" bosss-path-reference "\")\n"))))
+
 (defun run-bosss-repl ()
   (interactive)
   (let* ((bosss-program bosss-repl-path)
