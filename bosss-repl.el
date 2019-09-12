@@ -1,13 +1,17 @@
-;; (defvar bosss-repl-path "/usr/bin/csharp")
-(defvar bosss-repl-path "/usr/bin/bosss-console")
-;; (defvar bosss-repl-path "/home/klingenberg/BoSSS-experimental/internal/src/private-kli/BoSSSpad-console-simple/BoSSSpad-console-simple/bin/Debug/BoSSSpad-console-simple.exe")
+(defvar bosss-repl-path "/usr/bin/csharp")
+;; (defvar bosss-repl-path "/usr/bin/bosss-console")
 
 ;; (defvar bosss-repl-arguments
 ;;   (when bosss-path
 ;;     (cons nil
 ;; 	   (mapcar (lambda (entry) (concat "-r:" entry)) (directory-files bosss-path t)))))
 
-(defvar bosss-repl-arguments nil)
+(defvar bosss-repl-arguments
+  (when bosss-path-reference
+    (cons nil
+          (list (concat "-r:" bosss-path-reference)))))
+
+;; (defvar bosss-repl-arguments nil)
 
 (defvar bosss-repl-mode-map (make-sparse-keymap))
 
@@ -66,17 +70,17 @@
      (bosss-repl-send-region beg (point)))))
 
 ;; we are going to do this differently
-;; (defun bosss-repl-install ()
-;;   "installs the files needed to run the csharp repl with bosss loaded"
-;;   ;; TODO general file paths
-;;   (interactive)
-;;   (if (and (boundp 'bosss-path) bosss-path)
-;;       (progn
-;;        (copy-file "~/.emacs.d/dev/make-pkg.sh" bosss-path t)
-;;        (let ((default-directory bosss-path))
-;; 	 (async-shell-command
-;; 	  (concat bosss-path "/make-pkg.sh")))
-;;        (copy-file "~/.emacs.d/dev/init.cs" "~/.config/csharp/" t))
-;;     (error "Please specify the base path to your BoSSS installation")))
+(defun bosss-repl-install ()
+  "installs the files needed to run the csharp repl with bosss loaded"
+  ;; TODO general file paths
+  (interactive)
+   (if (and (boundp 'bosss-path) bosss-path)
+       (progn
+         (copy-file "~/.emacs.d/dev/make-pkg.sh" bosss-path t)
+         (let ((default-directory bosss-path))
+           (async-shell-command
+            (concat bosss-path "/make-pkg.sh")))
+         (copy-file "~/.emacs.d/dev/init.cs" "~/.config/csharp/" t))
+     (error "Please specify the base path to your BoSSS installation")))
 
 (provide 'bosss-repl)
