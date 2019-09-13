@@ -24,6 +24,22 @@
   (insert bosss--block-end-mark)
   (forward-line -2))
 
+(defun bosss-next-field ()
+  (interactive)
+  (search-forward bosss--block-beginning-mark)
+  (forward-line 1))
+
+(defun bosss-previous-field ()
+  (interactive)
+  (search-backward bosss--block-beginning-mark nil nil 2)
+  (forward-line 1))
+
+(defun bosss-eval-and-next-field ()
+  (interactive)
+  (bosss-repl-send-current-field)
+  (bosss-next-field))
+
+
 ;; TODO define text object for a field
 
 (provide 'bosss)

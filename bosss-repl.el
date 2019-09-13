@@ -1,4 +1,5 @@
-(defvar bosss-repl-path "/usr/bin/bosss-console")
+;; (defvar bosss-repl-path "/usr/bin/bosss-console")
+(defvar bosss-repl-path "/usr/local/bin/sdb")
 
 (defvar bosss-repl-arguments nil)
 
@@ -16,6 +17,16 @@
   (interactive)
   (when bosss-path-reference
     (comint-send-string "*bosss*" (concat "LoadAssembly(\"" bosss-path-reference "\")\n"))))
+
+(defun bosss-repl-start-bosss-pad ()
+  "only useful if bossspad is wrapped inside a debugger"
+  (interactive)
+  (comint-send-string
+   "*bosss*"
+   "args --simpleconsole \n")
+  (comint-send-string
+   "*bosss*"
+   (concat "run " bosss-pad-path)))
 
 (defun run-bosss-repl ()
   (interactive)
@@ -49,9 +60,26 @@
     (switch-to-buffer-other-window "*bosss*")
     (run-bosss-repl))
 
+;; (defun bosss-repl-send-region (beg end)
+;;   (interactive "r")
+;;   (comint-send-region "*bosss*" beg end))
+
+(defun bosss--format-input (input-string)
+ (replace-regexp-in-string
+                       "\n"
+                       ""
+                       (replace-regexp-in-string
+                        (rx (or (and "\*" (*? anything) "*/") (and "//" (*? anything) eol)))
+                        ""
+                         input-string)))
+
 (defun bosss-repl-send-region (beg end)
   (interactive "r")
-  (comint-send-region "*bosss*" beg end))
+  (comint-send-string "*bosss*"
+                      (concat
+                       (bosss--format-input
+                        (buffer-substring beg end))
+                       "\n")))
 
 (defun bosss-repl-send-current-field ()
   (interactive)
