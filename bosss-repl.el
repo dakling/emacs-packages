@@ -14,21 +14,23 @@
 (defvar bosss--block-end-mark  "**************")
 
 (defun bosss-repl-load-my-assembly ()
+  "load the personal project into the repl"
   (interactive)
   (when bosss-path-reference
     (comint-send-string "*bosss*" (concat "LoadAssembly(\"" bosss-path-reference "\")\n"))))
 
 (defun bosss-repl-start-bosss-pad ()
-  "only useful if bossspad is wrapped inside a debugger"
+  "only makes sense if bossspad is wrapped inside a debugger"
   (interactive)
   (comint-send-string
    "*bosss*"
    "args --simpleconsole \n")
   (comint-send-string
    "*bosss*"
-   (concat "run " bosss-pad-path)))
+   (concat "run " bosss-pad-path "\n")))
 
 (defun run-bosss-repl ()
+  "start the repl in a new or existing buffer"
   (interactive)
   (let* ((bosss-program bosss-repl-path)
 	 (buffer (comint-check-proc "bosss")))
@@ -40,7 +42,8 @@
     (unless buffer
       (apply 'make-comint-in-buffer "bosss" buffer
        bosss-program bosss-repl-arguments)
-      (bosss-repl-mode))))
+      (bosss-repl-mode)))
+  (bosss-repl-start-bosss-pad))
 
 (defun bosss--repl-initialize ()
   (setq comint-process-echoes t)
@@ -55,7 +58,8 @@
 
 (add-hook 'bosss-repl-mode-hook 'bosss--repl-initialize)
 
-(defun run-bosss-repl-other-frame ()
+(defun run-bosss-repl-other-window ()
+  "start the repl in another window"
     (interactive)
     (switch-to-buffer-other-window "*bosss*")
     (run-bosss-repl))
@@ -65,15 +69,19 @@
 ;;   (comint-send-region "*bosss*" beg end))
 
 (defun bosss--format-input (input-string)
+  "formats the input as a single line, which is better handled by comint"
+  ;; remove linebreaks
  (replace-regexp-in-string
                        "\n"
                        ""
+  ;; remove comments first
                        (replace-regexp-in-string
                         (rx (or (and "\*" (*? anything) "*/") (and "//" (*? anything) eol)))
                         ""
                          input-string)))
 
 (defun bosss-repl-send-region (beg end)
+  "send the active region to comint"
   (interactive "r")
   (comint-send-string "*bosss*"
                       (concat
@@ -82,6 +90,7 @@
                        "\n")))
 
 (defun bosss-repl-send-current-field ()
+  "send the current field to comint"
   (interactive)
   (save-excursion
    (search-backward bosss--block-beginning-mark)
