@@ -46,7 +46,8 @@
   (bosss-repl-start-bosss-pad))
 
 (defun bosss--repl-initialize ()
-  (setq comint-process-echoes t)
+  (setq comint-process-echoes nil)
+  (setq comint-input-sender-no-newline nil)
   (setq comint-use-prompt-regexp t))
 
 (define-derived-mode bosss-repl-mode comint-mode "bosss-repl"
@@ -99,6 +100,14 @@
      (search-forward bosss--block-end-mark)
      (move-end-of-line 0)
      (bosss-repl-send-region beg (point)))))
+
+;; not working; we need to check if each command has finished!
+;; (defun bosss-repl-send-buffer ()
+;;   (interactive)
+;;   (save-excursion
+;;     (goto-line 0)
+;;     (while (search-forward bosss--block-beginning-mark nil t)
+;;       (bosss-eval-and-next-field))))
 
 ;; (defun bosss-repl-install-private ()
 ;;   "installs the files needed to run the csharp repl with bosss loaded"
